@@ -8,6 +8,14 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe("APP", ()=>{
+    test("status 404: responds with route not found for invalid path", () => {
+        return request(app)
+        .get("/notapath")
+        .expect(404)
+        .then(({body})=>{
+            expect(body.msg).toBe("Route not found")
+        })
+    })
     describe("GET api/topics", () => {
         test("status 200: responds with an array of topics", () => {
             return request(app)
@@ -19,11 +27,10 @@ describe("APP", ()=>{
                     topics.forEach((topic)=>{
                         expect(topic).toMatchObject({
                             description: expect.any(String),
-                            slug: expect.any(String)                
+                            slug: expect.any(String) 
+                        }) 
+                    })              
             })
-         })
-         test("status 400: when provided an invalid topic")
+        })
     })
 })
-
-// test 400 for invalid url

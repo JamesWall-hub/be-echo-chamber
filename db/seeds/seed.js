@@ -58,7 +58,7 @@ const seed = (data) => {
         created_at DATE,
         body VARCHAR
       );`)
-  })
+  }) //google psql TIMESTAMP
   .then(() => {
     console.log("INSERTING TOPICS")
       const queryStr = format(`
@@ -145,4 +145,4 @@ const seed = (data) => {
   })
 }
 
-module.exports = seed;
+module.exports = {seed};

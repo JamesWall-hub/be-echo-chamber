@@ -18,7 +18,7 @@ const seed = (data) => {
     return db.query(`DROP TABLE IF EXISTS topics;`)
   })
   .then (()=>{
-    console.log("CREATING TOPICS TABLE")
+    // console.log("CREATING TOPICS TABLE")
     return db.query(`
       CREATE TABLE topics(
         slug VARCHAR PRIMARY KEY,
@@ -26,7 +26,7 @@ const seed = (data) => {
       );`)
   })
   .then (()=>{
-    console.log("CREATING USERS TABLE")
+    // console.log("CREATING USERS TABLE")
     return db.query(`
       CREATE TABLE users (
         username VARCHAR PRIMARY KEY,
@@ -35,7 +35,7 @@ const seed = (data) => {
       );`)
   })
   .then (()=>{
-    console.log("CREATING ARTICLES TABLE")
+    // console.log("CREATING ARTICLES TABLE")
     return db.query(`
       CREATE TABLE articles(
         article_id SERIAL PRIMARY KEY,
@@ -44,23 +44,23 @@ const seed = (data) => {
         votes INT DEFAULT 0,
         topic VARCHAR REFERENCES topics (slug),
         author VARCHAR REFERENCES users(username),
-        created_at DATE
+        created_at TIMESTAMPTZ
       );`)
   })
   .then (()=>{
-    console.log("CREATING COMMENTS TABLE")
+    // console.log("CREATING COMMENTS TABLE")
     return db.query(`
       CREATE TABLE comments(
         comment_id SERIAL PRIMARY KEY,
         author VARCHAR REFERENCES users(username),
         article_id INT REFERENCES articles(article_id),
         votes INT DEFAULT 0,
-        created_at DATE,
+        created_at TIMESTAMPTZ,
         body VARCHAR
       );`)
-  }) //google psql TIMESTAMP
+  })
   .then(() => {
-    console.log("INSERTING TOPICS")
+    // console.log("INSERTING TOPICS")
       const queryStr = format(`
       INSERT INTO topics(
         slug,
@@ -77,7 +77,7 @@ const seed = (data) => {
   return db.query(queryStr)
   })
   .then(() => {
-    console.log("INSERTING USERS")
+    // console.log("INSERTING USERS")
       const queryStr = format(`
       INSERT INTO users(
         username,
@@ -96,7 +96,7 @@ const seed = (data) => {
   return db.query(queryStr)
   })
   .then(() => {
-    console.log("INSERTING ARTICLES")
+    // console.log("INSERTING ARTICLES")
       const queryStr = format(`
       INSERT INTO articles(
         title,
@@ -121,7 +121,7 @@ const seed = (data) => {
   return db.query(queryStr)
   })
   .then(() => {
-    console.log("INSERTING COMMENTS")
+    // console.log("INSERTING COMMENTS")
       const queryStr = format(`
       INSERT INTO comments(
         author,

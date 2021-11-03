@@ -10,17 +10,20 @@ afterAll(() => db.end())
 
 describe("APP", () => {
     describe("GET /api/topics", () => {
-        test("status 200: responds with an array of topics", async () => {
-            const { body: { topics } } = await request(app)
-                .get("/api/topics")
-                .expect(200);
-            expect(topics).toHaveLength(3);
-            topics.forEach((topic) => {
-                expect(topic).toMatchObject({
+        test("status 200: responds with an array of topics", () => {
+            return request(app)
+            .get("/api/topics")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.topics).toHaveLength(3);
+                body.topics.forEach((topic) => {
+                    expect(topic).toMatchObject({
                     description: expect.any(String),
                     slug: expect.any(String)
+                    });
                 });
-            });
+            })
+            
         })
         test("status 404: responds with route not found for invalid path", () => {
             return request(app)
@@ -161,6 +164,42 @@ describe("APP", () => {
             .expect(200)
             .then(({body}) => {
                 expect(body.articles).toEqual([])
+            })
+        })
+    })
+    describe("GET /api/articles/:article_id/comments", () => {
+        test("status 200: responds with an array of comments matching article id", () => {
+            return request(app)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(({body}) => {
+                console.log(body.comments)
+                expect(body.comments).toHaveLength(11);
+                body.comments.forEach((comment) => {
+                    expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String)
+                    });
+                });
+            })
+        })
+        test("status 200: responds with an empty array for an article with no comments", () => {
+            return request(app)
+            .get("/api/articles/2/comments")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toEqual([])
+            })
+        })
+        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+            return request(app)
+            .get("/api/articles/999/comments")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Article not found")
             })
         })
     })

@@ -26,3 +26,15 @@ exports.selectArticleById = (id) => {
         return formattedData[0]
     })
 } 
+
+exports.updateArticle = (id, votes) => {
+    const updateString = `
+    UPDATE articles
+    SET votes = votes + ($2)
+    WHERE article_id = $1
+    ;`
+    const values = [id, votes]
+    return db.query(updateString, values).then(() => {
+        return this.selectArticleById(id)
+    })
+}

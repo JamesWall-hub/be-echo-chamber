@@ -74,7 +74,6 @@ describe("APP", () => {
             .send({ inc_votes: 40 })
             .expect(202)
             .then(({body}) => {
-                console.log(body.article)
                 expect(body.article).toEqual(
                     {
                         article_id: 1,
@@ -102,6 +101,66 @@ describe("APP", () => {
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Route not found")
+            })
+        })
+    })
+    describe("GET /api/articles", () => {
+        test("status 200: responds with an array of articles ordered by date descending by default", () => {
+            return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy("created_at", {descending: true})
+            })
+        })
+        test("status 200: responds with an array of articles matching sort_by and order query", () => {
+            return request(app)
+            .get("/api/articles?sort_by=comment_count&order=asc")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy("comment_count", {ascending: true})
+            })
+        })
+        test("status 200: responds with an array of articles matching topic query", () => {
+            return request(app)
+            .get("/api/articles?topic=mitch")
+            .expect(200)
+            .then(({body}) => {
+                body.articles.forEach((article) => {
+                    expect(article.topic).toBe("mitch")
+                })
+            })
+        })
+        test("status 400: responds with invalid sort_by query", () => {
+            return request(app)
+            .get("/api/articles?sort_by=article_id")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid sort_by query")
+            })
+        })
+        test("status 400: responds with invalid order query", () => {
+            return request(app)
+            .get("/api/articles?order=article_id")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid order query")
+            })
+        })
+        test("status 404: responds with topic not found for a valid topic that does not exist yet", () => {
+            return request(app)
+            .get("/api/articles?topic=ifeelbadformitch")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Topic not found")
+            })
+        })
+        test("status 200: responds with an empty array for a topic with no articles", () => {
+            return request(app)
+            .get("/api/articles?topic=paper")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toEqual([])
             })
         })
     })

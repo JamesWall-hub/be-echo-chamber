@@ -134,6 +134,14 @@ describe("APP", () => {
                 })
             })
         })
+        test("status 200: responds with an empty array for a topic with no articles", () => {
+            return request(app)
+            .get("/api/articles?topic=paper")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toEqual([])
+            })
+        })
         test("status 400: responds with invalid sort_by query", () => {
             return request(app)
             .get("/api/articles?sort_by=article_id")
@@ -158,14 +166,6 @@ describe("APP", () => {
                 expect(body.msg).toBe("Topic not found")
             })
         })
-        test("status 200: responds with an empty array for a topic with no articles", () => {
-            return request(app)
-            .get("/api/articles?topic=paper")
-            .expect(200)
-            .then(({body}) => {
-                expect(body.articles).toEqual([])
-            })
-        })
     })
     describe("GET /api/articles/:article_id/comments", () => {
         test("status 200: responds with an array of comments matching article id", () => {
@@ -173,7 +173,6 @@ describe("APP", () => {
             .get("/api/articles/1/comments")
             .expect(200)
             .then(({body}) => {
-                console.log(body.comments)
                 expect(body.comments).toHaveLength(11);
                 body.comments.forEach((comment) => {
                     expect(comment).toMatchObject({
@@ -194,12 +193,70 @@ describe("APP", () => {
                 expect(body.comments).toEqual([])
             })
         })
-        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+        test("status 400: responds with error message for invalid query", () => {
+            return request(app)
+            .get("/api/articles/NaN/comments")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+        test("status 404: responds with article not found for valid id that does not exist yet", () => {
             return request(app)
             .get("/api/articles/999/comments")
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Article not found")
+            })
+        })
+    })
+    describe("POST /api/articles/:article_id/comments", () => {
+        test("status 201: responds with the created comment", () => {
+            return request(app)
+            .post("/api/articles/1/comments")
+            .send({
+                username: "butter_bridge",
+                body: "dot to be or dot not to be"
+            })
+            .expect(201)
+            .then(({body}) => {
+                expect(body.comment.author).toBe("butter_bridge")
+                expect(body.comment.body).toBe("dot to be or dot not to be")
+                });
+            })
+        test("status 400: responds with error message for invalid query", () => {
+            return request(app)
+            .post("/api/articles/NaN/comments")
+            .send({
+                username: "butter_bridge",
+                body: "dot to be or dot not to be"
+            })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+                })
+            })
+        test("status 400: responds with error message for invalid request body", () => {
+            return request(app)
+            .post("/api/articles/1/comments")
+            .send({
+                body: "dot to be or dot not to be"
+            })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+            return request(app)
+            .post("/api/articles/999/comments")
+            .send({
+                username: "butter_bridge",
+                body: "dot to be or dot not to be"
+            })
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Route not found")
             })
         })
     })

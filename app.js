@@ -22,7 +22,7 @@ app.use(handle500s)
 
 module.exports = app
 
-// finish serving up json
+// fix serving up json format in GET /api
 
 // handle 422s in post and patch
 

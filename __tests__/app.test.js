@@ -289,7 +289,7 @@ describe("APP", () => {
             .get("/api")
             .expect(200)
             .then(({body}) => {
-                console.log(body)
+               console.log(body.endpoints)
             })
         })
     })

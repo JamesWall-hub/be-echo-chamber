@@ -1,3 +1,4 @@
+const { query } = require('../db')
 const db = require('../db')
 
 exports.selectCommentsByArticle = async (id) => {
@@ -51,5 +52,27 @@ exports.insertCommentByArticle = async (id, username, body) => {
     // }
 
     return rows[0]
+
+}
+
+exports.deleteCommentById = async (id) => {
+
+    ("delete comment")
+
+    const queryString = `
+    DELETE FROM comments
+    WHERE comment_id = $1
+    RETURNING *
+    ;`
+
+    const values = [id]
+
+    const { rows } = await db.query(queryString, values)
+
+    if(rows.length === 0){
+        return Promise.reject({status: 404, msg: "Comment not found"})
+    }
+
+    return
 
 }

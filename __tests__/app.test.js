@@ -260,4 +260,27 @@ describe("APP", () => {
             })
         })
     })
+    describe("DELETE /api/comments/:comment_id", () => {
+        test("status 204: responds with no content and deletes specified comment", () => {
+            return request(app)
+            .delete("/api/comments/1")
+            .expect(204)
+        })
+        test("status 400: responds with error message for invalid query", () => {
+            return request(app)
+            .delete("/api/comments/NaN")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+            return request(app)
+            .delete("/api/comments/999")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Comment not found")
+            })
+        })
+    })
 })

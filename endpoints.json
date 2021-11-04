@@ -10,7 +10,7 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
+    "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
@@ -19,9 +19,87 @@
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": 1527695953341,
+          "votes": 0
         }
       ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an article specified by id",
+    "queries": ["id"],
+    "exampleResponse": {
+      "article": [
+        {
+          "title": "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+          "topic": "coding",
+          "author": "jessjelly",
+          "body": "Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+          "created_at": 1589418120000,
+          "votes": 0
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "alters the votes on an article specified by id",
+    "queries": ["id"],
+    "exampleRequest": {
+      "inc_votes": 40 
+    },
+    "exampleResponse": {
+      "article": [
+        {
+          "title": "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+          "topic": "coding",
+          "author": "jessjelly",
+          "body": "Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+          "created_at": 1589418120000,
+          "votes": 40
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of comments specified by article id",
+    "queries": ["id"],
+    "exampleResponse": {
+      "comments": [
+        {
+        "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
+        "votes": 12,
+        "author": "tickle122",
+        "article_id": 17,
+        "created_at": 1586387400000
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment with reference to article id",
+    "queries": ["id"],
+    "exampleRequest": {
+      "username": "tickle122",
+      "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda."
+    },
+    "exampleResponse": {
+      "comment": [
+        {
+        "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
+        "votes": 12,
+        "author": "tickle122",
+        "article_id": 17,
+        "created_at": 1586387400000
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment by comment id",
+    "queries": ["id"],
+    "exampleResponse": {
+      "status": 204,
+      "msg": "No content"
     }
   }
 }

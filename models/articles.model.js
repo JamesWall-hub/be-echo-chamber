@@ -1,5 +1,4 @@
 const db = require('../db')
-const {formatCount} = require('../utils.js')
 
 exports.selectArticleById = (id) => {
     const queryString = `
@@ -11,7 +10,7 @@ exports.selectArticleById = (id) => {
     articles.created_at,
     articles.votes,
     articles.author,
-    COUNT(comments.comment_id) AS comment_count
+    CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
     FROM articles 
     LEFT JOIN comments ON articles.article_id = comments.article_id
     WHERE articles.article_id = $1
@@ -22,8 +21,7 @@ exports.selectArticleById = (id) => {
         if (rows.length === 0){
             return Promise.reject({status: 404, msg: "Route not found"})
         }
-        const formattedData = formatCount(rows)
-        return formattedData[0]
+        return rows[0]
     })
 } 
 

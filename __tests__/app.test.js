@@ -274,12 +274,22 @@ describe("APP", () => {
                 expect(body.msg).toBe("Invalid input")
             })
         })
-        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+        test("status 404: responds with comment not found for valid id that does not exist yet", () => {
             return request(app)
             .delete("/api/comments/999")
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Comment not found")
+            })
+        })
+    })
+    describe("GET /api", () => {
+        test("status 200: responds with JSON of all endpoints", () => {
+            return request(app)
+            .get("/api")
+            .expect(200)
+            .then(({body}) => {
+                console.log(body)
             })
         })
     })

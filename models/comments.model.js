@@ -28,12 +28,13 @@ exports.selectCommentsByArticle = async (id) => {
 
 exports.insertCommentByArticle = async (id, username, body) => {
     const queryString = `
-    INSERT INTO comments(
+    INSERT INTO comments
+    (
         article_id,
         author,
         body,
         created_at
-      )
+    )
     VALUES
         ($1, $2, $3, $4)
     RETURNING *
@@ -57,7 +58,6 @@ exports.insertCommentByArticle = async (id, username, body) => {
 
 exports.deleteCommentById = async (id) => {
 
-    ("delete comment")
 
     const queryString = `
     DELETE FROM comments

@@ -7,6 +7,6 @@ exports.readEndPoints = () => {
         if (err) {
           return err
         }
-        return data
+        return JSON.parse(data)
     })
 } 

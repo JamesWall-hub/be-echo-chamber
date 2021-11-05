@@ -93,14 +93,25 @@ describe("APP", () => {
         test("status 400: responds with error message for invalid query", () => {
             return request(app)
             .patch("/api/articles/NaN")
+            .send({ inc_votes: 1 })
             .expect(400)
             .then(({body}) => {
                 expect(body.msg).toBe("Invalid input")
             })
         })
+        test("status 422: responds with uprocessable entity for invalid request body", () => {
+            return request(app)
+            .patch("/api/articles/1")
+            .send({ inc_votes: "NaN" })
+            .expect(422)
+            .then(({body}) => {
+                expect(body.msg).toBe("Unprocessable entity")
+            })
+        })
         test("status 404: responds with route not found for valid id that does not exist yet", () => {
             return request(app)
             .patch("/api/articles/999")
+            .send({ inc_votes: 1 })
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Route not found")
@@ -236,15 +247,15 @@ describe("APP", () => {
                 expect(body.msg).toBe("Invalid input")
                 })
             })
-        test("status 400: responds with error message for invalid request body", () => {
+        test("status 422: responds with unprocessable entity for invalid request body", () => {
             return request(app)
             .post("/api/articles/1/comments")
             .send({
                 body: "dot to be or dot not to be"
             })
-            .expect(400)
+            .expect(422)
             .then(({body}) => {
-                expect(body.msg).toBe("Invalid input")
+                expect(body.msg).toBe("Unprocessable entity")
             })
         })
         test("status 404: responds with route not found for valid id that does not exist yet", () => {
@@ -289,7 +300,8 @@ describe("APP", () => {
             .get("/api")
             .expect(200)
             .then(({body}) => {
-               console.log(body.endpoints)
+            // console.log(body.endpoints)
+            // expect object containing or matching
             })
         })
     })

@@ -5,7 +5,12 @@ const { getAllEndPoints } = require('../controllers/api.controllers')
 
 const apiRouter = require("express").Router()
 
-apiRouter.route('/').get(getAllEndPoints)
+apiRouter
+.route('/')
+.get(getAllEndPoints)
+.all((req,res) => {
+    res.status(405).send({status: 405, msg: "Method not allowed"})
+})
 
 apiRouter.use('/topics', topicsRouter)
 

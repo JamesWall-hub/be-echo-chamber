@@ -26,6 +26,9 @@ exports.selectArticleById = (id) => {
 } 
 
 exports.updateArticle = (id, votes) => {
+    if(typeof votes !== "number"){
+        return Promise.reject({status: 422, msg: "Unprocessable entity"})
+    }
     const updateString = `
     UPDATE articles
     SET votes = votes + ($2)

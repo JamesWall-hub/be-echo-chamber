@@ -1,6 +1,6 @@
 const express = require('express')
 const apiRouter = require('./routes/api.router.js')
-const {handleCustomErrors, handlePSQL, handlePSQLNotFound, handle500s} = require("./errors.js")
+const {handleCustomErrors, handlePSQL, handlePSQLNotFound, handle500s, handlePSQLentity} = require("./errors.js")
 
 const app = express()
 
@@ -14,6 +14,8 @@ app.all("/*", (req, res, next) => {
 
 app.use(handleCustomErrors)
 
+app.use(handlePSQLentity)
+
 app.use(handlePSQLNotFound)
 
 app.use(handlePSQL)
@@ -22,8 +24,5 @@ app.use(handle500s)
 
 module.exports = app
 
-// fix serving up json format in GET /api
-
-// handle 422s in post and patch
-
-// check handlePSQLNotFound
+// to do
+// write tests for 405 method not allowed paths

@@ -6,7 +6,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
     }
 }
 
-exports.handlePSQLNotFound = (err,req,res,next) => {
+exports.handlePSQLNotFound = (err, req, res, next) => {
     if(err.code === "23503") {
         res.status(404).send({msg: "Route not found"})
     } else {
@@ -14,8 +14,16 @@ exports.handlePSQLNotFound = (err,req,res,next) => {
     }
 }
 
+exports.handlePSQLentity = (err, req, res, next) => {
+    if (err.code === "23502"){
+        res.status(422).send({msg: "Unprocessable entity"})
+    } else {
+        next(err)
+    }
+}
+
 exports.handlePSQL = (err, req, res, next) => {
-    if (err.code === "22P02" || "23502"){
+    if (err.code === "22P02"){
         res.status(400).send({msg: "Invalid input"})
     } else {
         next(err)

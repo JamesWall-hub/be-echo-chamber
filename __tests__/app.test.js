@@ -418,4 +418,41 @@ describe("APP", () => {
             })
         })
     })
+    describe("PATCH /api/comments/:comment_id", () => {
+        test("status 202: responds with specified comment and updated vote amount", () => {
+            return request(app)
+            .patch("/api/comments/1")
+            .send({ inc_votes: 40 })
+            .expect(202)
+            .then(({body}) => {
+                expect(body.comment).toEqual(
+                    {
+                        comment_id: 1,
+                        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                        votes: 56,
+                        author: "butter_bridge",
+                        article_id: 9,
+                        created_at: expect.any(String),
+                      })
+            })
+        })
+        test("status 422: responds with uprocessable entity for invalid request body", () => {
+            return request(app)
+            .patch("/api/comments/1")
+            .send({ inc_votes: "NaN" })
+            .expect(422)
+            .then(({body}) => {
+                expect(body.msg).toBe("Unprocessable entity")
+            })
+        })
+        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+            return request(app)
+            .patch("/api/articles/999")
+            .send({ inc_votes: 1 })
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Route not found")
+            })
+        })
+    })
 })

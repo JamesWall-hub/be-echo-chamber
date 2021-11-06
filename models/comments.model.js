@@ -43,14 +43,6 @@ exports.insertCommentByArticle = async (id, username, body) => {
     const values = [id, username, body, created]
 
     const {rows} = await db.query(queryString, values)
-    
-    // const articleResult = await db.query(`
-    //     SELECT * FROM articles WHERE article_id = $1
-    //     ;`, [id])
-        
-    // if(articleResult.rows.length === 0){
-    //     return Promise.reject({status: 404, msg: "Article not found"})
-    // }
 
     return rows[0]
 
@@ -75,4 +67,22 @@ exports.deleteCommentById = async (id) => {
 
     return
 
+}
+
+exports.updateComment = async (id, votes) => {
+    if(typeof votes !== "number"){
+        return Promise.reject({status: 422, msg: "Unprocessable entity"})
+    }
+    const updateString = `
+    UPDATE comments
+    SET votes = votes + ($2)
+    WHERE comment_id = $1
+    RETURNING *
+    ;`
+    const values = [id, votes]
+
+    const {rows} = await db.query(updateString, values)
+
+    return rows[0]
+    
 }

@@ -9,6 +9,28 @@ afterAll(() => db.end())
 
 
 describe("APP", () => {
+    describe("GET /api", () => {
+        test("status 200: responds with JSON of all endpoints", () => {
+            return request(app)
+            .get("/api")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.endpoints).toMatchObject(
+                    {
+                    
+                            'GET /api': expect.any(Object),
+                            'GET /api/topics': expect.any(Object),
+                            'GET /api/articles': expect.any(Object),
+                            'GET /api/articles/:article_id': expect.any(Object),
+                            'PATCH /api/articles/:article_id': expect.any(Object),
+                            'GET /api/articles/:article_id/comments': expect.any(Object),
+                            'POST /api/articles/:article_id/comments': expect.any(Object),
+                            'DELETE /api/comments/:comment_id': expect.any(Object),
+                        
+                    })
+            })
+        })
+    })
     describe("GET /api/topics", () => {
         test("status 200: responds with an array of topics", () => {
             return request(app)
@@ -31,6 +53,14 @@ describe("APP", () => {
             .expect(404)
             .then(({body})=>{
                 expect(body.msg).toBe("Route not found")
+            })
+        })
+        test("status 405: responds with method not allowed for unspecified method", () => {
+            return request(app)
+            .delete("/api/topics")
+            .expect(405)
+            .then(({body}) => {
+                expect(body.msg).toBe("Method not allowed")
             })
         })
     })
@@ -67,6 +97,14 @@ describe("APP", () => {
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Route not found")
+            })
+        })
+        test("status 405: responds with method not allowed for unspecified method", () => {
+            return request(app)
+            .delete("/api/articles/1")
+            .expect(405)
+            .then(({body}) => {
+                expect(body.msg).toBe("Method not allowed")
             })
         })
     })
@@ -177,6 +215,14 @@ describe("APP", () => {
                 expect(body.msg).toBe("Topic not found")
             })
         })
+        test("status 405: responds with method not allowed for unspecified method", () => {
+            return request(app)
+            .put("/api/articles")
+            .expect(405)
+            .then(({body}) => {
+                expect(body.msg).toBe("Method not allowed")
+            })
+        })
     })
     describe("GET /api/articles/:article_id/comments", () => {
         test("status 200: responds with an array of comments matching article id", () => {
@@ -218,6 +264,14 @@ describe("APP", () => {
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Article not found")
+            })
+        })
+        test("status 405: responds with method not allowed for unspecified method", () => {
+            return request(app)
+            .delete("/api/articles/1/comments")
+            .expect(405)
+            .then(({body}) => {
+                expect(body.msg).toBe("Method not allowed")
             })
         })
     })
@@ -293,15 +347,12 @@ describe("APP", () => {
                 expect(body.msg).toBe("Comment not found")
             })
         })
-    })
-    describe("GET /api", () => {
-        test("status 200: responds with JSON of all endpoints", () => {
+        test("status 405: responds with method not allowed for unspecified method", () => {
             return request(app)
-            .get("/api")
-            .expect(200)
+            .put("/api/comments/1")
+            .expect(405)
             .then(({body}) => {
-            // console.log(body.endpoints)
-            // expect object containing or matching
+                expect(body.msg).toBe("Method not allowed")
             })
         })
     })

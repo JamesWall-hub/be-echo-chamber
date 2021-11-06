@@ -23,6 +23,3 @@ app.use(handlePSQL)
 app.use(handle500s)
 
 module.exports = app
-
-// to do
-// write tests for 405 method not allowed paths

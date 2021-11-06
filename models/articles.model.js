@@ -43,7 +43,9 @@ exports.updateArticle = (id, votes) => {
 exports.selectAllArticles = async (
     sort_by = "created_at",
     order = "desc",
-    topic
+    topic,
+    limit = 10,
+    p = 1
     ) => {
 
     if(!["created_at", "votes", "comment_count"].includes(sort_by)){
@@ -52,6 +54,8 @@ exports.selectAllArticles = async (
     if(!["asc", "desc"].includes(order)){
         return Promise.reject({status: 400, msg: "Invalid order query"})
     }
+
+    const offset = (p-1) * limit
     
     let queryString = `
     SELECT
@@ -66,17 +70,19 @@ exports.selectAllArticles = async (
     FROM articles 
     LEFT JOIN comments ON articles.article_id = comments.article_id
     ` 
-    const queryValues = []
+    const queryValues = [limit, offset]
 
     if(topic){
         queryValues.push(topic)
-        queryString += `WHERE topic = $1`
+        queryString += `WHERE topic = $3`
     }
 
 
     queryString += `
     GROUP BY articles.article_id
     ORDER BY ${sort_by} ${order}
+    LIMIT $1
+    OFFSET $2
     ;`
 
     const {rows} = await db.query(queryString, queryValues)
@@ -84,7 +90,7 @@ exports.selectAllArticles = async (
     if(rows.length === 0 && topic !== undefined){
         const topicResult = await db.query(`
         SELECT * FROM topics WHERE slug = $1
-        ;`, queryValues)
+        ;`, [topic])
         
         if(topicResult.rows.length === 0){
             return Promise.reject({status: 404, msg: "Topic not found"})

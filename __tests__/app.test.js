@@ -165,6 +165,30 @@ describe("APP", () => {
                 expect(body.articles).toBeSortedBy("created_at", {descending: true})
             })
         })
+        test("status 200: responds with an array of articles with a length of up to 10 by default", () => {
+            return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toHaveLength(10)
+            })
+        })
+        test("status 200: responds with an array of articles matching limit query", () => {
+            return request(app)
+            .get("/api/articles?limit=4")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toHaveLength(4)
+            })
+        })
+        test("status 200: responds with an array of articles matching page query", () => {
+            return request(app)
+            .get("/api/articles?p=2")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toHaveLength(2)
+            })
+        })
         test("status 200: responds with an array of articles matching sort_by and order query", () => {
             return request(app)
             .get("/api/articles?sort_by=comment_count&order=asc")
@@ -205,6 +229,22 @@ describe("APP", () => {
             .expect(400)
             .then(({body}) => {
                 expect(body.msg).toBe("Invalid order query")
+            })
+        })
+        test("status 400: responds with invalid input for invalid limit query", () => {
+            return request(app)
+            .get("/api/articles?limit=NaN")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+        test("status 400: responds with invalid input for invalid page query", () => {
+            return request(app)
+            .get("/api/articles?p=NaN")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
             })
         })
         test("status 404: responds with topic not found for a valid topic that does not exist yet", () => {

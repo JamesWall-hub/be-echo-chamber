@@ -19,8 +19,8 @@ exports.voteArticle = (req, res, next) => {
 }
 
 exports.getAllArticles = (req, res, next) => {
-    const {sort_by, order, topic} = req.query
-    selectAllArticles(sort_by, order, topic)
+    const {sort_by, order, topic, limit, p} = req.query
+    selectAllArticles(sort_by, order, topic, limit, p)
     .then((articles) => {
         res.status(200).send({ articles })
     })

@@ -356,4 +356,66 @@ describe("APP", () => {
             })
         })
     })
+    describe("GET /api/users", () => {
+        test("status 200: responds with an array of users", () => {
+            return request(app)
+            .get("/api/users")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.users).toHaveLength(4);
+                body.users.forEach((user) => {
+                    expect(user).toMatchObject({
+                    username: expect.any(String)
+                    });
+                });
+            })
+        })
+        test("status 404: responds with route not found for invalid path", () => {
+            return request(app)
+            .get("/api/user")
+            .expect(404)
+            .then(({body})=>{
+                expect(body.msg).toBe("Route not found")
+            })
+        })
+        test("status 405: responds with method not allowed for unspecified method", () => {
+            return request(app)
+            .delete("/api/users")
+            .expect(405)
+            .then(({body}) => {
+                expect(body.msg).toBe("Method not allowed")
+            })
+        })
+    })
+    describe("GET /api/users/:username", () => {
+        test("status 200: responds with corresponding user when searched by username", () => {
+            return request(app)
+            .get("/api/users/butter_bridge")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.user).toEqual({
+                        username: 'butter_bridge',
+                        name: 'jonny',
+                        avatar_url:
+                          'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'    
+                })
+            })
+        })
+        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+            return request(app)
+            .get("/api/user/1")
+            .expect(404)
+            .then(({body})=>{
+                expect(body.msg).toBe("Route not found")
+            })
+        })
+        test("status 405: responds with method not allowed for unspecified method", () => {
+            return request(app)
+            .put("/api/users/butter_bridge")
+            .expect(405)
+            .then(({body}) => {
+                expect(body.msg).toBe("Method not allowed")
+            })
+        })
+    })
 })

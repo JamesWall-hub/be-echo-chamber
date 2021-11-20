@@ -91,12 +91,12 @@ describe("APP", () => {
                 expect(body.msg).toBe("Invalid input")
             })
         })
-        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+        test("status 404: responds with article not found for valid id that does not exist yet", () => {
             return request(app)
             .get("/api/articles/999")
             .expect(404)
             .then(({body}) => {
-                expect(body.msg).toBe("Route not found")
+                expect(body.msg).toBe("Article not found")
             })
         })
         test("status 405: responds with method not allowed for unspecified method", () => {
@@ -109,11 +109,11 @@ describe("APP", () => {
         })
     })
     describe("PATCH /api/articles/:article_id", () => {
-        test("status 202: responds with specified article and updated vote amount", () => {
+        test("status 200: responds with specified article and updated vote amount", () => {
             return request(app)
             .patch("/api/articles/1")
             .send({ inc_votes: 40 })
-            .expect(202)
+            .expect(200)
             .then(({body}) => {
                 expect(body.article).toEqual(
                     {
@@ -121,6 +121,25 @@ describe("APP", () => {
                         title: 'Living in the shadow of a great man',
                         body: 'I find this existence challenging',
                         votes: 140,
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        created_at: expect.any(String),
+                        comment_count: 11
+                    })
+            })
+        })
+        test("status 200: ignores a patch request with no information in body and sends article", () => {
+            return request(app)
+            .patch("/api/articles/1")
+            .send({})
+            .expect(200)
+            .then(({body}) => {
+                expect(body.article).toEqual(
+                    {
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        body: 'I find this existence challenging',
+                        votes: 100,
                         topic: 'mitch',
                         author: 'butter_bridge',
                         created_at: expect.any(String),
@@ -137,22 +156,22 @@ describe("APP", () => {
                 expect(body.msg).toBe("Invalid input")
             })
         })
-        test("status 422: responds with uprocessable entity for invalid request body", () => {
+        test("status 400: responds with bad request for invalid request body", () => {
             return request(app)
             .patch("/api/articles/1")
             .send({ inc_votes: "NaN" })
-            .expect(422)
+            .expect(400)
             .then(({body}) => {
-                expect(body.msg).toBe("Unprocessable entity")
+                expect(body.msg).toBe("Bad request")
             })
         })
-        test("status 404: responds with route not found for valid id that does not exist yet", () => {
+        test("status 404: responds with article not found for valid id that does not exist yet", () => {
             return request(app)
             .patch("/api/articles/999")
             .send({ inc_votes: 1 })
             .expect(404)
             .then(({body}) => {
-                expect(body.msg).toBe("Route not found")
+                expect(body.msg).toBe("Article not found")
             })
         })
     })
@@ -202,6 +221,7 @@ describe("APP", () => {
             .get("/api/articles?topic=mitch")
             .expect(200)
             .then(({body}) => {
+                expect(body.articles).toHaveLength(10)
                 body.articles.forEach((article) => {
                     expect(article.topic).toBe("mitch")
                 })
@@ -329,7 +349,7 @@ describe("APP", () => {
                 expect(body.comment.body).toBe("dot to be or dot not to be")
                 });
             })
-        test("status 400: responds with error message for invalid query", () => {
+        test("status 400: responds with error message for invalid id", () => {
             return request(app)
             .post("/api/articles/NaN/comments")
             .send({
@@ -341,15 +361,15 @@ describe("APP", () => {
                 expect(body.msg).toBe("Invalid input")
                 })
             })
-        test("status 422: responds with unprocessable entity for invalid request body", () => {
+        test("status 400: responds with bad request for invalid request body", () => {
             return request(app)
             .post("/api/articles/1/comments")
             .send({
                 body: "dot to be or dot not to be"
             })
-            .expect(422)
+            .expect(400)
             .then(({body}) => {
-                expect(body.msg).toBe("Unprocessable entity")
+                expect(body.msg).toBe("Bad request")
             })
         })
         test("status 404: responds with route not found for valid id that does not exist yet", () => {
@@ -441,6 +461,14 @@ describe("APP", () => {
                 })
             })
         })
+        test("status 404" , () => {
+            return request(app)
+            .get("/api/users/not-a-user")
+            .expect(404)
+            .then(({body})=>{
+                expect(body.msg).toBe("Route not found")
+            })
+        })
         test("status 404: responds with route not found for valid id that does not exist yet", () => {
             return request(app)
             .get("/api/user/1")
@@ -459,11 +487,11 @@ describe("APP", () => {
         })
     })
     describe("PATCH /api/comments/:comment_id", () => {
-        test("status 202: responds with specified comment and updated vote amount", () => {
+        test("status 200: responds with specified comment and updated vote amount", () => {
             return request(app)
             .patch("/api/comments/1")
             .send({ inc_votes: 40 })
-            .expect(202)
+            .expect(200)
             .then(({body}) => {
                 expect(body.comment).toEqual(
                     {
@@ -476,18 +504,35 @@ describe("APP", () => {
                       })
             })
         })
-        test("status 422: responds with uprocessable entity for invalid request body", () => {
+        test("status 200: responds with specified comment when sent empty request body", () => {
+            return request(app)
+            .patch("/api/comments/1")
+            .send({})
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comment).toEqual(
+                    {
+                        comment_id: 1,
+                        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                        votes: 16,
+                        author: "butter_bridge",
+                        article_id: 9,
+                        created_at: expect.any(String),
+                      })
+            })
+        })
+        test("status 400: responds with bad request for invalid request body", () => {
             return request(app)
             .patch("/api/comments/1")
             .send({ inc_votes: "NaN" })
-            .expect(422)
+            .expect(400)
             .then(({body}) => {
-                expect(body.msg).toBe("Unprocessable entity")
+                expect(body.msg).toBe("Bad request")
             })
         })
         test("status 404: responds with route not found for valid id that does not exist yet", () => {
             return request(app)
-            .patch("/api/articles/999")
+            .patch("/api/comments/999")
             .send({ inc_votes: 1 })
             .expect(404)
             .then(({body}) => {

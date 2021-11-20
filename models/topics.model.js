@@ -1,9 +1,8 @@
 const db = require('../db')
 
 
-exports.selectAllTopics = () => {
+exports.selectAllTopics = async () => {
     const queryString = `SELECT * FROM topics;`
-    return db.query(queryString).then(({rows}) => {
-            return rows
-    })
+    const { rows } = await db.query(queryString)
+    return rows
 } 

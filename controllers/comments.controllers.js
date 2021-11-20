@@ -33,7 +33,7 @@ exports.voteComment = (req, res, next) => {
     const { comment_id } = req.params
     updateComment(comment_id, inc_votes)
     .then((updatedComment) => {
-        res.status(202).send({ comment: updatedComment})
+        res.status(200).send({ comment: updatedComment})
     })
     .catch(next)
 }

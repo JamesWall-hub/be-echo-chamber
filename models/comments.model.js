@@ -69,9 +69,9 @@ exports.deleteCommentById = async (id) => {
 
 }
 
-exports.updateComment = async (id, votes) => {
+exports.updateComment = async (id, votes=0) => {
     if(typeof votes !== "number"){
-        return Promise.reject({status: 422, msg: "Unprocessable entity"})
+        return Promise.reject({status: 400, msg: "Bad request"})
     }
     const updateString = `
     UPDATE comments
@@ -82,6 +82,10 @@ exports.updateComment = async (id, votes) => {
     const values = [id, votes]
 
     const {rows} = await db.query(updateString, values)
+
+    if(rows.length === 0){
+        return Promise.reject({status: 404, msg: "Route not found"})
+    }
 
     return rows[0]
     

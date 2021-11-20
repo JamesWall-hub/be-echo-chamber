@@ -4,7 +4,7 @@ const db = require('../index.js');
 
 const runSeed = () => {
   return seed(devData).then(() => db.end()).catch((err)=>{
-    console.log(err)
+  console.log(err)
   });
 };
 

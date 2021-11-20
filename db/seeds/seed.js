@@ -5,8 +5,6 @@ const seed = (data) => {
 
   const { articleData, commentData, topicData, userData } = data;
 
-  console.log("SEEDING")
-
   return db.query(`DROP TABLE IF EXISTS comments;`)
   .then(()=>{
     return db.query(`DROP TABLE IF EXISTS articles;`)
@@ -18,7 +16,6 @@ const seed = (data) => {
     return db.query(`DROP TABLE IF EXISTS topics;`)
   })
   .then (()=>{
-    // console.log("CREATING TOPICS TABLE")
     return db.query(`
       CREATE TABLE topics(
         slug VARCHAR PRIMARY KEY,
@@ -26,7 +23,6 @@ const seed = (data) => {
       );`)
   })
   .then (()=>{
-    // console.log("CREATING USERS TABLE")
     return db.query(`
       CREATE TABLE users (
         username VARCHAR PRIMARY KEY,
@@ -35,7 +31,6 @@ const seed = (data) => {
       );`)
   })
   .then (()=>{
-    // console.log("CREATING ARTICLES TABLE")
     return db.query(`
       CREATE TABLE articles(
         article_id SERIAL PRIMARY KEY,
@@ -44,23 +39,21 @@ const seed = (data) => {
         votes INT DEFAULT 0,
         topic VARCHAR REFERENCES topics (slug),
         author VARCHAR REFERENCES users(username),
-        created_at TIMESTAMPTZ
+        created_at TIMESTAMP DEFAULT NOW()
       );`)
   })
   .then (()=>{
-    // console.log("CREATING COMMENTS TABLE")
     return db.query(`
       CREATE TABLE comments(
         comment_id SERIAL PRIMARY KEY,
         author VARCHAR REFERENCES users(username) NOT NULL,
-        article_id INT REFERENCES articles(article_id),
+        article_id INT REFERENCES articles(article_id) ON DELETE CASCADE,
         votes INT DEFAULT 0,
-        created_at TIMESTAMPTZ,
+        created_at TIMESTAMP DEFAULT NOW(),
         body VARCHAR
       );`)
   })
   .then(() => {
-    // console.log("INSERTING TOPICS")
       const queryStr = format(`
       INSERT INTO topics(
         slug,
@@ -77,7 +70,6 @@ const seed = (data) => {
   return db.query(queryStr)
   })
   .then(() => {
-    // console.log("INSERTING USERS")
       const queryStr = format(`
       INSERT INTO users(
         username,
@@ -96,7 +88,6 @@ const seed = (data) => {
   return db.query(queryStr)
   })
   .then(() => {
-    // console.log("INSERTING ARTICLES")
       const queryStr = format(`
       INSERT INTO articles(
         title,
@@ -121,7 +112,6 @@ const seed = (data) => {
   return db.query(queryStr)
   })
   .then(() => {
-    // console.log("INSERTING COMMENTS")
       const queryStr = format(`
       INSERT INTO comments(
         author,

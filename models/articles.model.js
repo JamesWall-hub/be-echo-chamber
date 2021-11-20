@@ -1,6 +1,6 @@
 const db = require('../db')
 
-exports.selectArticleById = (id) => {
+exports.selectArticleById = async (id) => {
     const queryString = `
     SELECT
     articles.title,
@@ -17,27 +17,26 @@ exports.selectArticleById = (id) => {
     GROUP BY articles.article_id
     ;`
     const values = [id]
-    return db.query(queryString, values).then(({rows}) => {
-        if (rows.length === 0){
-            return Promise.reject({status: 404, msg: "Route not found"})
-        }
-        return rows[0]
-    })
+    const { rows } = await db.query(queryString, values)
+    if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article not found" })
+    }
+    return rows[0]
 } 
 
-exports.updateArticle = (id, votes) => {
-    if(typeof votes !== "number"){
-        return Promise.reject({status: 422, msg: "Unprocessable entity"})
+exports.updateArticle = async (id, votes=0) => {
+        if(typeof votes !== "number"){
+            return Promise.reject({status: 400, msg: "Bad request"})
     }
+    
     const updateString = `
     UPDATE articles
     SET votes = votes + ($2)
     WHERE article_id = $1
     ;`
     const values = [id, votes]
-    return db.query(updateString, values).then(() => {
-        return this.selectArticleById(id)
-    })
+    await db.query(updateString, values)
+    return await this.selectArticleById(id)
 }
 
 exports.selectAllArticles = async (
@@ -61,7 +60,6 @@ exports.selectAllArticles = async (
     SELECT
     articles.title,
     articles.article_id,
-    articles.body,
     articles.topic,
     articles.created_at,
     articles.votes,

@@ -16,7 +16,7 @@ exports.handlePSQLNotFound = (err, req, res, next) => {
 
 exports.handlePSQLentity = (err, req, res, next) => {
     if (err.code === "23502"){
-        res.status(422).send({msg: "Unprocessable entity"})
+        res.status(400).send({msg: "Bad request"})
     } else {
         next(err)
     }

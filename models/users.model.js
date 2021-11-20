@@ -1,20 +1,21 @@
 const db = require('../db')
 
 
-exports.selectAllUsers = () => {
+exports.selectAllUsers = async () => {
     const queryString = `SELECT username FROM users;`
-    return db.query(queryString).then(({rows}) => {
-            return rows
-    })
+    const { rows } = await db.query(queryString)
+    return rows
 } 
 
-exports.selectUserById = (id) => {
+exports.selectUserById = async (id) => {
     const queryString = `
     SELECT *
     FROM users
     WHERE username = $1
     ;`
-    return db.query(queryString, [id]).then(({rows}) => {
-            return rows[0]
-    })
+    const { rows } = await db.query(queryString, [id])
+    if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Route not found" })
+    }
+    return rows[0]
 }

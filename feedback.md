@@ -46,9 +46,9 @@ Hints:
 
 ## General
 
-- [ ] Remove any unnecessary `console.logs` and comments
+- [ x ] Remove any unnecessary `console.logs` and comments
 - [ ] Remove all unnecessary files (e.g. old `README.md`, `error-handling.md`, `hosting.md`, `./db/utils/README.md` etc.)
-- [ ] .gitignore the `.env` files
+- [ x ] .gitignore the `.env` files
 
 ## Connection to db
 
@@ -175,7 +175,7 @@ Hints:
 
 - [ x ] Patch: Edit an article body
 - [ x ] Patch: Edit a comment body
-- [ ] Patch: Edit a user's information
+- [ x ] Patch: Edit a user's information
 - [ ] Get: Search for an article by title
 - [ ] Post: add a new user
 

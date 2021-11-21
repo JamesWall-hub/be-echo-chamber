@@ -2,7 +2,8 @@ const {selectCommentsByArticle, insertCommentByArticle, deleteCommentById, updat
 
 exports.getCommentByArticleId = (req, res, next) => {
     const { article_id }= req.params
-    selectCommentsByArticle(article_id)
+    const {limit, p } = req.query 
+    selectCommentsByArticle(article_id, limit, p)
     .then((comments) => {
         res.status(200).send({ comments })
     })

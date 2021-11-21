@@ -311,12 +311,12 @@ describe("APP", () => {
         })
     })
     describe("GET /api/articles/:article_id/comments", () => {
-        test("status 200: responds with an array of comments matching article id", () => {
+        test("status 200: responds with an array of comments matching article id, default length of 10", () => {
             return request(app)
             .get("/api/articles/1/comments")
             .expect(200)
             .then(({body}) => {
-                expect(body.comments).toHaveLength(11);
+                expect(body.comments).toHaveLength(10);
                 body.comments.forEach((comment) => {
                     expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
@@ -326,6 +326,22 @@ describe("APP", () => {
                     body: expect.any(String)
                     });
                 });
+            })
+        })
+        test("status 200: responds with an array of comments matching limit query", () => {
+            return request(app)
+            .get("/api/articles/1/comments?limit=4")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toHaveLength(4)
+            })
+        })
+        test("status 200: responds with an array of comments matching page query", () => {
+            return request(app)
+            .get("/api/articles/1/comments?p=2")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toHaveLength(1)
             })
         })
         test("status 200: responds with an empty array for an article with no comments", () => {

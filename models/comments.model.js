@@ -21,7 +21,8 @@ exports.selectCommentById = async (id) => {
     return rows[0]
 }
 
-exports.selectCommentsByArticle = async (id) => {
+exports.selectCommentsByArticle = async (id, limit = 10, p = 1) => {
+    const offset = (p-1) * limit
     const queryString = `
     SELECT
     comment_id,
@@ -30,9 +31,11 @@ exports.selectCommentsByArticle = async (id) => {
     author,
     body
     FROM comments 
-    WHERE article_id = $1;`
+    WHERE article_id = $1
+    LIMIT $2
+    OFFSET $3;`
     
-    const {rows} = await db.query(queryString, [id])
+    const {rows} = await db.query(queryString, [id, limit, offset])
 
     if(rows.length === 0){
         const articleResult = await db.query(`

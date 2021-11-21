@@ -84,26 +84,29 @@ exports.deleteCommentById = async (id) => {
 
 }
 
-exports.updateComment = async (id, votes=0, reqBody="") => {
+exports.updateComment = async (id, votes=0, reqBody) => {
     if(typeof votes !== "number"){
         return Promise.reject({status: 400, msg: "Bad request"})
     }
-    if(!reqBody){
-        const {body} = await this.selectCommentById(id)
-        reqBody = body
-    }
-    const updateString = `
+
+    const values = [id, votes]
+
+    let updateString = `
     UPDATE comments
-    SET votes = votes + ($2), body = ($3)
-    WHERE comment_id = $1
-    RETURNING *
-    ;`
-    const values = [id, votes, reqBody]
+    SET votes = votes + ($2)
+    `
+
+    if(reqBody){
+        values.push(reqBody)
+        updateString += `, body = ($3)`
+    }
+
+    updateString += `WHERE comment_id = $1 RETURNING *;`
 
     const {rows} = await db.query(updateString, values)
 
     if(rows.length === 0){
-        return Promise.reject({status: 404, msg: "Route not found"})
+        return Promise.reject({status: 404, msg: "Comment not found"})
     }
 
     return rows[0]

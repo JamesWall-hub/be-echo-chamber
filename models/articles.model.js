@@ -56,7 +56,7 @@ exports.selectAllArticles = async (
     p = 1
     ) => {
 
-    if(!["created_at", "votes", "comment_count"].includes(sort_by)){
+    if(!["created_at", "votes", "comment_count", "author"].includes(sort_by)){
         return Promise.reject({status: 400, msg: "Invalid sort_by query"})
     }
     if(!["asc", "desc"].includes(order)){

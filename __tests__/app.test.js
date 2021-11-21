@@ -262,6 +262,14 @@ describe("APP", () => {
                 expect(body.articles[0].title).toBe("A")
             })
         })
+        test("status 200: responds with an array of articles matching author query", () => {
+            return request(app)
+            .get("/api/articles?sort_by=author")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy("author", {descending: true})
+            })
+        })
         test("status 200: responds with an empty array for a topic with no articles", () => {
             return request(app)
             .get("/api/articles?topic=paper")

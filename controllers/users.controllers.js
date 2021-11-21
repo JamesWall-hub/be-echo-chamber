@@ -1,4 +1,4 @@
-const { selectAllUsers, selectUserById, updateUser } = require('../models/users.model.js')
+const { selectAllUsers, selectUserById, updateUser, insertUser } = require('../models/users.model.js')
 
 exports.getAllUsers = (req, res, next) => {
     selectAllUsers()
@@ -22,6 +22,15 @@ exports.patchUser = (req, res, next) => {
     updateUser(username, name, avatar_url, new_username)
     .then((user) => {
         res.status(200).send({user})
+    })
+    .catch(next)
+}
+
+exports.postUser = (req, res, next) => {
+    const {username, name, avatar_url} = req.body
+    insertUser(username, name, avatar_url)
+    .then((user) => {
+        res.status(201).send({user})
     })
     .catch(next)
 }

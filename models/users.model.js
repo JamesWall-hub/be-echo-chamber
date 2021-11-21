@@ -49,3 +49,21 @@ exports.updateUser = async (username, name, avatar, newUsername) => {
     await db.query(queryString, queryValues)
     return this.selectUserById(newUsername)
 }
+
+exports.insertUser = async (username, name="", avatar_url="") => {
+    const queryString = `
+    INSERT INTO users(
+        username,
+        avatar_url,
+        name
+    )
+    VALUES
+    ($1, $3, $2)
+    RETURNING *
+    ;`
+    const values = [username, name, avatar_url]
+
+    const { rows } = await db.query(queryString, values)
+
+    return rows[0]
+}

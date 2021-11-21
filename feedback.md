@@ -119,7 +119,7 @@ Hints:
   - [ x ] Status 404, non existent ID, e.g. 0 or 9999
   - [ x ] Status 400, missing required field(s), e.g. no username or body properties
   - [ x ] Status 404, username does not exist
-  - [ ] Status 201, ignores unnecessary properties ?????
+  - [ ? ] Status 201, ignores unnecessary properties
 
   - `DELETE /api/comments/:comment_id`
 
@@ -135,7 +135,7 @@ Hints:
 
 - [ x ] Status 200, responds with single user object
 - [ x ] Status 404, non existant ID, e.g 999
-- [ ] Status 400, invalid ID, e.g "not-an-id"
+- [ ? ] Status 400, invalid ID, e.g "not-an-id"
 
 - `PATCH /api/comments/:comment_id`
 

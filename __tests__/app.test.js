@@ -767,4 +767,37 @@ describe("APP", () => {
             })
         })
     })
+    describe("POST /api/users", () => {
+        test("status 201: responds with the created user", () => {
+            return request(app)
+            .post("/api/users")
+            .send(
+                {
+                    username: "test_user",
+                    name: "test",
+                    avatar_url: "test"
+                  }
+            )
+            .expect(201)
+            .then(({body}) => {
+                expect(body.user).toMatchObject(
+                    {
+                        username: "test_user",
+                        name: "test",
+                        avatar_url: "test"
+                    })
+            })
+        })
+        test("status 400: responds with bad request for invalid request body", () => {
+            return request(app)
+            .post("/api/users")
+            .send({
+                name: "missing_username"
+            })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Bad request")
+            })
+        })
+    })
 })

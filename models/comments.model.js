@@ -1,6 +1,26 @@
 const { query } = require('../db')
 const db = require('../db')
 
+exports.selectCommentById = async (id) => {
+    const queryString = `
+    SELECT
+    comment_id,
+    votes,
+    created_at,
+    author,
+    body
+    FROM comments 
+    WHERE comment_id = $1;`
+
+    const {rows} = await db.query(queryString, [id])
+
+    if(rows.length === 0){
+        return Promise.reject({status: 404, msg: "Comment not found"})
+    }
+
+    return rows[0]
+}
+
 exports.selectCommentsByArticle = async (id) => {
     const queryString = `
     SELECT
@@ -64,17 +84,21 @@ exports.deleteCommentById = async (id) => {
 
 }
 
-exports.updateComment = async (id, votes=0) => {
+exports.updateComment = async (id, votes=0, reqBody="") => {
     if(typeof votes !== "number"){
         return Promise.reject({status: 400, msg: "Bad request"})
     }
+    if(!reqBody){
+        const {body} = await this.selectCommentById(id)
+        reqBody = body
+    }
     const updateString = `
     UPDATE comments
-    SET votes = votes + ($2)
+    SET votes = votes + ($2), body = ($3)
     WHERE comment_id = $1
     RETURNING *
     ;`
-    const values = [id, votes]
+    const values = [id, votes, reqBody]
 
     const {rows} = await db.query(updateString, values)
 

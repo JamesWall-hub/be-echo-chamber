@@ -20,12 +20,19 @@ describe("APP", () => {
                     
                             'GET /api': expect.any(Object),
                             'GET /api/topics': expect.any(Object),
-                            'GET /api/articles': expect.any(Object),
                             'GET /api/articles/:article_id': expect.any(Object),
                             'PATCH /api/articles/:article_id': expect.any(Object),
+                            'GET /api/articles': expect.any(Object),
                             'GET /api/articles/:article_id/comments': expect.any(Object),
                             'POST /api/articles/:article_id/comments': expect.any(Object),
                             'DELETE /api/comments/:comment_id': expect.any(Object),
+                            'GET /api/users': expect.any(Object),
+                            'GET /api/users/:username': expect.any(Object),
+                            'PATCH /api/comments/:comment_id': expect.any(Object),
+                            'POST /api/articles': expect.any(Object),
+                            'POST /api/topics': expect.any(Object),
+                            'DELETE /api/articles/:article_id': expect.any(Object),
+                            'GET /api/comments/:comment_id': expect.any(Object),
                         
                     })
             })
@@ -121,6 +128,25 @@ describe("APP", () => {
                         title: 'Living in the shadow of a great man',
                         body: 'I find this existence challenging',
                         votes: 140,
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        created_at: expect.any(String),
+                        comment_count: 11
+                    })
+            })
+        })
+        test("status 200: responds with specified article and updated body", () => {
+            return request(app)
+            .patch("/api/articles/1")
+            .send({ body: "test" })
+            .expect(200)
+            .then(({body}) => {
+                expect(body.article).toEqual(
+                    {
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        body: 'test',
+                        votes: 100,
                         topic: 'mitch',
                         author: 'butter_bridge',
                         created_at: expect.any(String),
@@ -504,6 +530,23 @@ describe("APP", () => {
                       })
             })
         })
+        test("status 200: responds with specified comment and updated body", () => {
+            return request(app)
+            .patch("/api/comments/1")
+            .send({ body: "test body"})
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comment).toEqual(
+                    {
+                        comment_id: 1,
+                        body: "test body",
+                        votes: 16,
+                        author: "butter_bridge",
+                        article_id: 9,
+                        created_at: expect.any(String),
+                      })
+            })
+        })
         test("status 200: responds with specified comment when sent empty request body", () => {
             return request(app)
             .patch("/api/comments/1")
@@ -536,7 +579,7 @@ describe("APP", () => {
             .send({ inc_votes: 1 })
             .expect(404)
             .then(({body}) => {
-                expect(body.msg).toBe("Route not found")
+                expect(body.msg).toBe("Comment not found")
             })
         })
     })
@@ -628,6 +671,39 @@ describe("APP", () => {
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Article not found")
+            })
+        })
+    })
+    describe("GET /api/comments/:comment_id", () => {
+        test("status 200: responds with corresponding comment when passed valid id", () => {
+            return request(app)
+            .get("/api/comments/1")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comment).toMatchObject(
+                    {
+                        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                        votes: 16,
+                        author: "butter_bridge",
+                        comment_id: 1,
+                        created_at: expect.any(String),
+                    })
+            })
+        })
+        test("status 400: responds with error message for invalid query", () => {
+            return request(app)
+            .get("/api/comments/NaN")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+        test("status 404: responds with comment not found for valid id that does not exist yet", () => {
+            return request(app)
+            .get("/api/comments/999")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Comment not found")
             })
         })
     })

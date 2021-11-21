@@ -24,17 +24,23 @@ exports.selectArticleById = async (id) => {
     return rows[0]
 } 
 
-exports.updateArticle = async (id, votes=0) => {
+exports.updateArticle = async (id, votes=0, reqBody="") => {
         if(typeof votes !== "number"){
             return Promise.reject({status: 400, msg: "Bad request"})
     }
+
+    if(!reqBody){
+        const {body} = await this.selectArticleById(id)
+        reqBody = body
+    }
+    
     
     const updateString = `
     UPDATE articles
-    SET votes = votes + ($2)
+    SET votes = votes + ($2), body = ($3)
     WHERE article_id = $1
     ;`
-    const values = [id, votes]
+    const values = [id, votes, reqBody]
     await db.query(updateString, values)
     return await this.selectArticleById(id)
 }

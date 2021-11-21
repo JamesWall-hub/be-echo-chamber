@@ -101,7 +101,7 @@ describe("APP", () => {
         })
         test("status 405: responds with method not allowed for unspecified method", () => {
             return request(app)
-            .delete("/api/articles/1")
+            .put("/api/articles/1")
             .expect(405)
             .then(({body}) => {
                 expect(body.msg).toBe("Method not allowed")
@@ -605,6 +605,29 @@ describe("APP", () => {
             .expect(400)
             .then(({body}) => {
                 expect(body.msg).toBe("Bad request")
+            })
+        })
+    })
+    describe("DELETE /api/articles/:article_id", () => {
+        test("status 204: responds with no content and deletes specified comment", () => {
+            return request(app)
+            .delete("/api/articles/1")
+            .expect(204)
+        })
+        test("status 400: responds with error message for invalid query", () => {
+            return request(app)
+            .delete("/api/articles/NaN")
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid input")
+            })
+        })
+        test("status 404: responds with article not found for valid id that does not exist yet", () => {
+            return request(app)
+            .delete("/api/articles/999")
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Article not found")
             })
         })
     })

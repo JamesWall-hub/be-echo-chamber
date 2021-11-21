@@ -56,7 +56,7 @@ Hints:
 
 ## Creating tables
 
-- [ ] Use `NOT NULL` on required fields
+- [ x ] Use `NOT NULL` on required fields
 - [ x ] Default `created_at` in articles and comments tables to the current date:`TIMESTAMP DEFAULT NOW()`
 - [ x ] Delete all comments when the article they are related to is deleted: Add `ON DELETE CASCADE` to `article_id` column in `comments` table.
 
@@ -142,7 +142,7 @@ Hints:
   - [ x ] Status 200, updated single comment object
   - [ x ] Status 400, invalid ID, e.g. string of "not-an-id"
   - [ x ] Status 404, non existent ID, e.g. 0 or 9999
-  - [ ] Status 400, missing / incorrect body, e.g. `inc_votes` property is not a number, or missing
+  - [ x ] Status 400, missing / incorrect body, e.g. `inc_votes` property is not a number, or missing
 
 
 ## Routing

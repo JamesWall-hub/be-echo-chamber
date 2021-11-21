@@ -126,3 +126,18 @@ exports.insertArticle = async (author, title, body, topic) => {
     return updatedArticle
 
 }
+
+exports.deleteArticle = async (id) => {
+
+    const queryString = `
+    DELETE FROM articles
+    WHERE article_id = $1
+    RETURNING *
+    ;`
+    const values = [id]
+    const { rows } = await db.query(queryString, values)
+    if(rows.length === 0){
+        return Promise.reject({status: 404, msg: "Article not found"})
+    }
+    return
+}

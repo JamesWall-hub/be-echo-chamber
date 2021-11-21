@@ -1,4 +1,4 @@
-const { getArticleById, voteArticle, getAllArticles, postArticle } = require("../controllers/articles.controllers")
+const { getArticleById, voteArticle, getAllArticles, postArticle, deleteArticleById } = require("../controllers/articles.controllers")
 
 const { getCommentByArticleId, postCommentByArticle } = require("../controllers/comments.controllers")
 
@@ -8,6 +8,7 @@ articlesRouter
 .route("/:article_id")
 .get(getArticleById)
 .patch(voteArticle)
+.delete(deleteArticleById)
 .all((req,res) => {
     res.status(405).send({status: 405, msg: "Method not allowed"})
 })

@@ -1,4 +1,4 @@
-const { getAllUsers, getUserById } = require("../controllers/users.controllers")
+const { getAllUsers, getUserById, patchUser } = require("../controllers/users.controllers")
 
 const usersRouter = require("express").Router()
 
@@ -12,6 +12,7 @@ usersRouter
 usersRouter
 .route("/:user_id")
 .get(getUserById)
+.patch(patchUser)
 .all((req,res) => {
     res.status(405).send({status: 405, msg: "Method not allowed"})
 })

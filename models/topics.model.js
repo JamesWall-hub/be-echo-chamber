@@ -17,7 +17,8 @@ exports.insertTopic = async (slug, description) => {
         $1,
         $2
     )
-    RETURNING *`
+    RETURNING *
+    ;`
 
     const values = [slug, description]
     const { rows } = await db.query(queryString, values)

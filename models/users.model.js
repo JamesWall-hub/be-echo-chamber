@@ -1,3 +1,4 @@
+const { query } = require('../db')
 const db = require('../db')
 
 
@@ -18,4 +19,33 @@ exports.selectUserById = async (id) => {
         return Promise.reject({ status: 404, msg: "Route not found" })
     }
     return rows[0]
+}
+
+exports.updateUser = async (username, name, avatar, newUsername) => {
+    if(!username) return Promise.reject({status: 400, msg: "Invalid request"})
+    let queryValues = [username, newUsername]
+
+    let queryString = `
+    UPDATE users
+    SET
+    username = ($2)
+    `
+
+    if(name) {
+        queryValues.push(name)
+        queryString += `, name = ($${queryValues.length})`
+    }
+
+    if(avatar) {
+        queryValues.push(avatar)
+        queryString += `, avatar_url = ($${queryValues.length})`
+    }
+
+    queryString += `
+    WHERE username = ($1)
+    RETURNING *
+    ;`
+
+    await db.query(queryString, queryValues)
+    return this.selectUserById(newUsername)
 }

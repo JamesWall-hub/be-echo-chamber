@@ -38,7 +38,7 @@ const seed = (data) => {
         body VARCHAR NOT NULL,
         votes INT DEFAULT 0,
         topic VARCHAR REFERENCES topics (slug) NOT NULL,
-        author VARCHAR REFERENCES users(username) NOT NULL,
+        author VARCHAR REFERENCES users(username) ON UPDATE CASCADE NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
       );`)
   })
@@ -46,7 +46,7 @@ const seed = (data) => {
     return db.query(`
       CREATE TABLE comments(
         comment_id SERIAL PRIMARY KEY,
-        author VARCHAR REFERENCES users(username) NOT NULL,
+        author VARCHAR REFERENCES users(username) ON UPDATE CASCADE NOT NULL,
         article_id INT REFERENCES articles(article_id) ON DELETE CASCADE,
         votes INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT NOW(),

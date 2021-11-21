@@ -9,7 +9,7 @@ afterAll(() => db.end())
 
 
 describe("APP", () => {
-    describe("GET /api", () => {
+    describe.skip("GET /api", () => {
         test("status 200: responds with JSON of all endpoints", () => {
             return request(app)
             .get("/api")
@@ -704,6 +704,50 @@ describe("APP", () => {
             .expect(404)
             .then(({body}) => {
                 expect(body.msg).toBe("Comment not found")
+            })
+        })
+    })
+    describe("PATCH /api/users/:username", () => {
+        test("status 200: responds with specified user and updated information", () => {
+            return request(app)
+            .patch("/api/users/butter_bridge")
+            .send({ 
+                username: "butter_bridge",
+                new_username: "test",
+                name: "test",
+                avatar_url: "test avatar"
+            })
+            .expect(200)
+            .then(({body}) => {
+                expect(body.user).toEqual(
+                    {   
+                        username: "test",
+                        name: "test",
+                        avatar_url: "test avatar"
+                    })
+            })
+        })
+        test("status 400: responds with bad request for invalid request body", () => {
+            return request(app)
+            .patch("/api/users/butter_bridge")
+            .send({ name: "test" })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid request")
+            })
+        })
+        test("status 404: responds with user not found for valid username that does not exist yet", () => {
+            return request(app)
+            .patch("/api/users/not_a_user")
+            .send({ 
+                username: "not_a_user",
+                new_username: "test_user",
+                name: "test",
+                avatar_url: "test avatar"
+            })
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Route not found")
             })
         })
     })

@@ -18,7 +18,7 @@ const seed = (data) => {
   .then (()=>{
     return db.query(`
       CREATE TABLE topics(
-        slug VARCHAR PRIMARY KEY,
+        slug VARCHAR PRIMARY KEY NOT NULL,
         description VARCHAR
       );`)
   })
@@ -34,11 +34,11 @@ const seed = (data) => {
     return db.query(`
       CREATE TABLE articles(
         article_id SERIAL PRIMARY KEY,
-        title VARCHAR,
-        body VARCHAR,
+        title VARCHAR NOT NULL,
+        body VARCHAR NOT NULL,
         votes INT DEFAULT 0,
-        topic VARCHAR REFERENCES topics (slug),
-        author VARCHAR REFERENCES users(username),
+        topic VARCHAR REFERENCES topics (slug) NOT NULL,
+        author VARCHAR REFERENCES users(username) NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
       );`)
   })

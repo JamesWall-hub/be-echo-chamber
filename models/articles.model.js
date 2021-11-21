@@ -98,3 +98,31 @@ exports.selectAllArticles = async (
 
     return rows
 }
+
+exports.insertArticle = async (author, title, body, topic) => {
+
+    const queryString = `
+    INSERT INTO articles
+    (
+        title,
+        body,
+        topic,
+        author,
+        created_at
+    )
+    VALUES
+        ($1, $2, $3, $4, $5)
+    RETURNING article_id
+    ;`
+    const created = new Date()
+    const values = [title, body, topic, author, created]
+
+    const {rows} = await db.query(queryString, values)
+
+    const {article_id} = rows[0]
+
+    const updatedArticle = await this.selectArticleById(article_id)
+
+    return updatedArticle
+
+}

@@ -540,4 +540,72 @@ describe("APP", () => {
             })
         })
     })
+    describe("POST /api/articles", () => {
+        test("status 201: responds with the created article", () => {
+            return request(app)
+            .post("/api/articles")
+            .send({
+                author: "butter_bridge",
+                title: "test",
+                body: "this is a test",
+                topic: "mitch"
+            })
+            .expect(201)
+            .then(({body}) => {
+                expect(body.article).toMatchObject(
+                    {
+                        article_id: expect.any(Number),
+                        title: 'test',
+                        body: 'this is a test',
+                        votes: 0,
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        created_at: expect.any(String),
+                        comment_count: 0
+                    })
+            })
+        })
+        test("status 400: responds with bad request for invalid request body", () => {
+            return request(app)
+            .post("/api/articles")
+            .send({
+                body: "missing some requirements"
+            })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Bad request")
+            })
+        })
+    })
+    describe("POST /api/topics", () => {
+        test("status 201: responds with the created topic", () => {
+            return request(app)
+            .post("/api/topics")
+            .send(
+                {
+                    slug: "test topic",
+                    description: "test description"
+                  }
+            )
+            .expect(201)
+            .then(({body}) => {
+                expect(body.topic).toMatchObject(
+                    {
+                        slug: "test topic",
+                        description: "test description"
+                    })
+            })
+        })
+        test("status 400: responds with bad request for invalid request body", () => {
+            return request(app)
+            .post("/api/topics")
+            .send({
+                body: "missing slug"
+            })
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Bad request")
+            })
+        })
+    })
 })

@@ -1,4 +1,4 @@
-const { getArticleById, voteArticle, getAllArticles } = require("../controllers/articles.controllers")
+const { getArticleById, voteArticle, getAllArticles, postArticle } = require("../controllers/articles.controllers")
 
 const { getCommentByArticleId, postCommentByArticle } = require("../controllers/comments.controllers")
 
@@ -15,6 +15,7 @@ articlesRouter
 articlesRouter
 .route("/")
 .get(getAllArticles)
+.post(postArticle)
 .all((req,res) => {
     res.status(405).send({status: 405, msg: "Method not allowed"})
 })

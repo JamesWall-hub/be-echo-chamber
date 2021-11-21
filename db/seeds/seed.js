@@ -50,7 +50,7 @@ const seed = (data) => {
         article_id INT REFERENCES articles(article_id) ON DELETE CASCADE,
         votes INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT NOW(),
-        body VARCHAR
+        body VARCHAR NOT NULL
       );`)
   })
   .then(() => {

@@ -1,40 +1,11 @@
 # James
 
-## seed
 
-- missing a few `NOT NULL` constraints you might find helpful for error handling
 - consider extracting out table creations/drops/insertions into their own functions to tidy things up
-- nice and tidy otherwise!
 
-## routes
-- nice use of `.route`
-- nice and organised
 - you're declaring a brand new func for each 405. Why not declare it and pass in the reference?
 
-
-## models
-- `readEndPoints` - no need to read the file. just require it in your controller! also you're passing the promise readfile a callback?
-
-## misc
-- remove console.logs!
 - remember to add a readme and remove unnecessary `.md` files when you're done with them.
-
-
-
-## Test Output
-
-Read through all errors. Note that any failing test could be caused by a problem uncovered in a previous test on the same endpoint.
-
-### ESSENTIAL GET `/api/articles?sort_by=author`
-
-Assertion: Cannot read properties of undefined (reading '0')
-
-Hints:
-- accept a `sort_by` query, with a value of any column name
-- use `author` for the column to store the username that created the article
-
-
-
 
 ## Readme - Remove the one that was provided and write your own
 
@@ -68,12 +39,12 @@ Hints:
 
 - [ x ] Seeding before each test
 - [ x ] If asserting inside a `forEach`, also has an assertion to check length is at least > 0
-- [ ] Ensure all tests are passing
-- [ ] Cover all endpoints and errors
+- [ x ] Ensure all tests are passing
+- [ x ] Cover all endpoints and errors
 
 - `GET /api`
 
-  - [ ] Status 200, JSON describing all the available endpoints
+  - [ x ] Status 200, JSON describing all the available endpoints
 
 - `GET /api/topics`
 
@@ -176,7 +147,7 @@ Hints:
 - [ x ] Patch: Edit an article body
 - [ x ] Patch: Edit a comment body
 - [ x ] Patch: Edit a user's information
-- [ ] Get: Search for an article by title
+- [ x ] Get: Search for an article by title
 - [ x ] Post: add a new user
 
 ### Harder

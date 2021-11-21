@@ -9,13 +9,13 @@ afterAll(() => db.end())
 
 
 describe("APP", () => {
-    describe.skip("GET /api", () => {
+    describe("GET /api", () => {
         test("status 200: responds with JSON of all endpoints", () => {
             return request(app)
             .get("/api")
             .expect(200)
             .then(({body}) => {
-                expect(body.endpoints).toMatchObject(
+                expect(body).toMatchObject(
                     {
                     
                             'GET /api': expect.any(Object),
@@ -33,7 +33,8 @@ describe("APP", () => {
                             'POST /api/topics': expect.any(Object),
                             'DELETE /api/articles/:article_id': expect.any(Object),
                             'GET /api/comments/:comment_id': expect.any(Object),
-                        
+                            'PATCH /api/users/:username': expect.any(Object),
+                            'POST /api/users': expect.any(Object)    
                     })
             })
         })
@@ -395,7 +396,7 @@ describe("APP", () => {
         })
     })
     describe("POST /api/articles/:article_id/comments", () => {
-        test("status 201: responds with the created comment", () => {
+        test("status 201: responds with the created comment and ignores uneccessary properties", () => {
             return request(app)
             .post("/api/articles/1/comments")
             .send({
@@ -518,14 +519,6 @@ describe("APP", () => {
                         avatar_url:
                           'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'    
                 })
-            })
-        })
-        test("status 404" , () => {
-            return request(app)
-            .get("/api/users/not-a-user")
-            .expect(404)
-            .then(({body})=>{
-                expect(body.msg).toBe("Route not found")
             })
         })
         test("status 404: responds with route not found for valid id that does not exist yet", () => {

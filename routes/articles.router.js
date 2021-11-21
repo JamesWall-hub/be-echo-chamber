@@ -1,8 +1,7 @@
 const { getArticleById, patchArticle, getAllArticles, postArticle, deleteArticleById } = require("../controllers/articles.controllers")
-
 const { getCommentByArticleId, postCommentByArticle } = require("../controllers/comments.controllers")
-
 const articlesRouter = require("express").Router()
+const { handle405s } = require("../errors.js")
 
 articlesRouter
 .route("/:article_id")

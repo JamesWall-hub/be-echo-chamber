@@ -3,15 +3,14 @@ const articlesRouter = require('./articles.router.js')
 const commentsRouter = require('./comments.router.js')
 const usersRouter = require('./users.router.js')
 const { getAllEndPoints } = require('../controllers/api.controllers')
+const { handle405s } = require("../errors.js")
 
 const apiRouter = require("express").Router()
 
 apiRouter
 .route('/')
 .get(getAllEndPoints)
-.all((req,res) => {
-    res.status(405).send({status: 405, msg: "Method not allowed"})
-})
+.all(handle405s)
 
 apiRouter.use('/topics', topicsRouter)
 

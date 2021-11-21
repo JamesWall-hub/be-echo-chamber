@@ -51,6 +51,7 @@ exports.selectAllArticles = async (
     sort_by = "created_at",
     order = "desc",
     topic,
+    title,
     limit = 10,
     p = 1
     ) => {
@@ -81,6 +82,11 @@ exports.selectAllArticles = async (
     if(topic){
         queryValues.push(topic)
         queryString += `WHERE topic = $3`
+    }
+
+    if(title){
+        queryValues.push(title)
+        queryString += `WHERE title = $3`
     }
 
 

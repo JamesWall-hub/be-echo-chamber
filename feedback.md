@@ -177,7 +177,7 @@ Hints:
 - [ x ] Patch: Edit a comment body
 - [ x ] Patch: Edit a user's information
 - [ ] Get: Search for an article by title
-- [ ] Post: add a new user
+- [ x ] Post: add a new user
 
 ### Harder
 

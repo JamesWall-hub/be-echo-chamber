@@ -19,8 +19,8 @@ exports.patchArticle = (req, res, next) => {
 }
 
 exports.getAllArticles = (req, res, next) => {
-    const {sort_by, order, topic, limit, p} = req.query
-    selectAllArticles(sort_by, order, topic, limit, p)
+    const {sort_by, order, topic, title, limit, p} = req.query
+    selectAllArticles(sort_by, order, topic, title, limit, p)
     .then((articles) => {
         res.status(200).send({ articles })
     })

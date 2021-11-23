@@ -79,16 +79,20 @@ exports.selectAllArticles = async (
     ` 
     const queryValues = [limit, offset]
 
-    if(topic){
+    if(topic && title){
+        queryValues.push(topic)
+        queryValues.push(title)
+        queryString += `WHERE topic = $3 AND title = $4`
+    } else if(title){
+        queryValues.push(title)
+        queryString += `WHERE title = $3`
+    } else if(topic){
         queryValues.push(topic)
         queryString += `WHERE topic = $3`
     }
 
-    if(title){
-        queryValues.push(title)
-        queryString += `WHERE title = $3`
-    }
 
+    
 
     queryString += `
     GROUP BY articles.article_id

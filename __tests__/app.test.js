@@ -386,6 +386,20 @@ describe("APP", () => {
                 expect(body.comments).toHaveLength(1)
             })
         })
+        test("status 200: responds with an array of comments ordered by date created descending by default", () => {
+            return request(app)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toBeSortedBy("created_at", {descending:true})            })
+        })
+        test("status 200: responds with an array of comments sorted by votes descending when queried", () => {
+            return request(app)
+            .get("/api/articles/1/comments?sort_by=votes")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.comments).toBeSortedBy("votes", {descending:true})            })
+        })
         test("status 200: responds with an empty array for an article with no comments", () => {
             return request(app)
             .get("/api/articles/2/comments")

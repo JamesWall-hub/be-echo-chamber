@@ -21,7 +21,18 @@ exports.selectCommentById = async (id) => {
     return rows[0]
 }
 
-exports.selectCommentsByArticle = async (id, limit = 10, p = 1) => {
+exports.selectCommentsByArticle = async (
+    id,
+    limit = 10,
+    p = 1,
+    sort_by = "created_at",
+    order = "desc",
+    ) => {
+    
+    if(!["created_at", "votes"].includes(sort_by)){
+            return Promise.reject({status: 400, msg: "Invalid sort_by query"})
+    }
+    
     const offset = (p-1) * limit
     const queryString = `
     SELECT
@@ -32,6 +43,7 @@ exports.selectCommentsByArticle = async (id, limit = 10, p = 1) => {
     body
     FROM comments 
     WHERE article_id = $1
+    ORDER BY ${sort_by} ${order}
     LIMIT $2
     OFFSET $3;`
     

@@ -256,12 +256,11 @@ describe("APP", () => {
         })
         test("status 200: responds with an array of articles matching title query", () => {
             return request(app)
-            .get("/api/articles?title=A")
+            .get("/api/articles?title=Student SUES Mitch!")
             .expect(200)
             .then(({body}) => {
-                expect(body.articles).toHaveLength(2)
-                expect(body.articles[0].title).toBe("A")
-                expect(body.articles[1].title).toBe("Am I a cat?")
+                expect(body.articles).toHaveLength(1)
+                expect(body.articles[0].title).toBe("Student SUES Mitch!")
             })
         })
         test("status 200: responds with an array of articles matching author query", () => {
@@ -282,17 +281,17 @@ describe("APP", () => {
         })
         test("status 200: responds with an array of articles matching topic AND title query", () => {
             return request(app)
-            .get("/api/articles?topic=mitch&title=A")
+            .get("/api/articles?topic=mitch&title=pug")
             .expect(200)
             .then(({body}) => {
                 expect(body.articles[0]).toEqual({
-                    article_id: 6,
-                    title: 'A',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    article_id: 3,
                     topic: 'mitch',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: 0,
                     author: 'icellusedkars',
-                    comment_count: 1,
-                    created_at: expect.any(String),
-                    votes: 0
+                    comment_count: 2
                 })
             })
         })

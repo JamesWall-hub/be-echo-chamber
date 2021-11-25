@@ -259,8 +259,9 @@ describe("APP", () => {
             .get("/api/articles?title=A")
             .expect(200)
             .then(({body}) => {
-                expect(body.articles).toHaveLength(1)
+                expect(body.articles).toHaveLength(2)
                 expect(body.articles[0].title).toBe("A")
+                expect(body.articles[1].title).toBe("Am I a cat?")
             })
         })
         test("status 200: responds with an array of articles matching author query", () => {
@@ -292,6 +293,22 @@ describe("APP", () => {
                     comment_count: 1,
                     created_at: expect.any(String),
                     votes: 0
+                })
+            })
+        })
+        test("status 200: responds with an array of articles matching title LIKE match query", () => {
+            return request(app)
+            .get("/api/articles?topic=mitch&title=Living")
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles[0]).toEqual({
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        created_at: expect.any(String),
+                        comment_count: 11,
+                        votes: 100
                 })
             })
         })

@@ -82,10 +82,10 @@ exports.selectAllArticles = async (
     if(topic && title){
         queryValues.push(topic)
         queryValues.push(title)
-        queryString += `WHERE topic = $3 AND title = $4`
+        queryString += `WHERE topic = $3 AND title ~ $4`
     } else if(title){
         queryValues.push(title)
-        queryString += `WHERE title = $3`
+        queryString += `WHERE title ~ $3`
     } else if(topic){
         queryValues.push(topic)
         queryString += `WHERE topic = $3`

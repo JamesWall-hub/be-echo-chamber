@@ -10,20 +10,20 @@ Hi! Welcome to my Echo Chamber API project!
 
 This project is inspired by the popular discussion site Reddit, and aims to emulate it's back end, with implementation and consideration of the following:
 
+- Building RESTful APIs and data transfer.
 - Using a Node.js Web Server App.
-- RESTful APIs and data transfer.
 - PostGresSQL databases and Express servers.
 - MVC architecture.
+- Test Driven Development.
 - Error handling.
-- All implemented through Test Driven Development.
 
 It is written using:
 
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/) as web server app framework.
-- [postGresSQL](https://www.postgresql.org/) as the underpinning database.
+- [postGresSQL](https://www.postgresql.org/) for building the database.
 - [Node-PG](https://www.npmjs.com/package/pg) for interacting with postGres.
-- [Jest](https://jestjs.io/), [jest-sorted](https://www.npmjs.com/package/jest-sorted) & [supertest](https://www.npmjs.com/package/supertest) for TDD testing.
+- [Jest](https://jestjs.io/), [jest-sorted](https://www.npmjs.com/package/jest-sorted) & [supertest](https://www.npmjs.com/package/supertest) for TDD.
 - [Github](https://github.com/) and [Heroku](https://heroku.com/) for git version control and hosting.
 
 ## Minimum requirements for running this project
@@ -61,10 +61,11 @@ npm run setup-dbs
 
 This will create the databases `nc_news` and `nc_news_test` in your local instance of PostgreSQL
 
-4. Next, you will need to create two `.env`, this will ensure the right database is seeded when a development or test script is run.
-   in the root directory of the repo, create the following two files:
+4. Next, you will need to create two `.env` files to ensure the right database is seeded when a development or test script is run.
+   In the root directory of the repo, create the following two files:
 
 - `.env.development`:
+
   edit the file to add this single line:
 
 ```env
@@ -72,6 +73,7 @@ PGDATABASE=nc_news
 ```
 
 - `.env.test`:
+
   edit the file to add this single line:
 
 ```env

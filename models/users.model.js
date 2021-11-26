@@ -3,7 +3,7 @@ const db = require('../db')
 
 
 exports.selectAllUsers = async () => {
-    const queryString = `SELECT username FROM users;`
+    const queryString = `SELECT * FROM users;`
     const { rows } = await db.query(queryString)
     return rows
 } 

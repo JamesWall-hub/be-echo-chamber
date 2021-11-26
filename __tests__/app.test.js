@@ -539,7 +539,9 @@ describe("APP", () => {
                 expect(body.users).toHaveLength(4);
                 body.users.forEach((user) => {
                     expect(user).toMatchObject({
-                    username: expect.any(String)
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
                     });
                 });
             })

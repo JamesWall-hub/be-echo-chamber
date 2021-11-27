@@ -734,7 +734,7 @@ describe("APP", () => {
         })
     })
     describe("DELETE /api/articles/:article_id", () => {
-        test("status 204: responds with no content and deletes specified comment", () => {
+        test("status 204: responds with no content and deletes specified article", () => {
             return request(app)
             .delete("/api/articles/1")
             .expect(204)

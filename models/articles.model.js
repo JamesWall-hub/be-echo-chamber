@@ -154,8 +154,8 @@ exports.deleteArticle = async (id) => {
     ;`
     const values = [id]
     const { rows } = await db.query(queryString, values)
-    // if(rows.length === 0){
-    //     return Promise.reject({status: 404, msg: "Article not found"})
-    // }
+    if(rows.length === 0){
+        return Promise.reject({status: 404, msg: "Article not found"})
+    }
     return
 }

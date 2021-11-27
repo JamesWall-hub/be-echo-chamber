@@ -739,6 +739,11 @@ describe("APP", () => {
             .delete("/api/articles/1")
             .expect(204)
         })
+        test("status 204: responds with no content and deletes specified article", () => {
+            return request(app)
+            .delete("/api/articles/2")
+            .expect(204)
+        })
         test("status 400: responds with error message for invalid query", () => {
             return request(app)
             .delete("/api/articles/NaN")

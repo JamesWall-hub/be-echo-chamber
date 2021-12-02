@@ -6,7 +6,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
     }
 }
 
-exports.handlePSQLNotFound = (err, req, res, next) => {
+exports.handlePSQLNotFound = (err, req, res, next) => { //review
     if(err.code === "23503") {
         res.status(404).send({msg: "Route not found"})
     } else {

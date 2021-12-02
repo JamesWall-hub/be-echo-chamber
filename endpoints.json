@@ -4,21 +4,19 @@
   },
   "GET /api/topics": {
     "description": "Serves an array of all topics",
-    "queries": [],
     "example response": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
     "description": "Serves an array of all articles, defaults to ten per page",
-    "queries": ["sort_by", "author", "title", "comment_count", "topic", "order"],
+    "queries": ["sort_by", "author", "title", "comment_count", "topic", "order", "asc", "desc"],
     "example response": {
       "articles": [
         {
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
-          "body": "Text from the article..",
           "created_at": 1527695953341,
           "votes": 0
         }
@@ -63,7 +61,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "Serves an array of comments specified by article id",
-    "queries": ["id"],
+    "queries": ["id", "sort_by", "created_at", "votes"],
     "example response": {
       "comments": [
         {
@@ -87,7 +85,7 @@
       "comment": [
         {
         "body": "Facilis corporis animi et non non minus nisi. Magnam et sequi dolorum fugiat ab assumenda.",
-        "votes": 12,
+        "votes": 0,
         "author": "tickle122",
         "article_id": 17,
         "created_at": 1586387400000
@@ -105,7 +103,6 @@
   },
   "GET /api/users":{
     "description": "Serves an array of all users",
-    "queries": [],
     "example response": {
       "users": [
         {
@@ -156,7 +153,6 @@
   },
   "POST /api/articles": {
     "description": "Posts a new article",
-    "queries": [],
     "example request": {
       "author": "butter_bridge",
       "title": "accepts a title",
@@ -171,14 +167,13 @@
           "votes": 0,
           "topic": "existing topic",
           "author": "butter_bridge",
-          "created_at": "date now",
+          "created_at": 1586387400000,
           "comment_count": "0"
       }
     }
   },
   "POST /api/topics": {
     "description": "Posts a new topic",
-    "queries": [],
     "example request": {
       "slug": "new topic",
       "description": "new topic description"
@@ -203,14 +198,11 @@
     "queries": ["id"],
     "example response": {
       "comment": {
-          "article_id": "8",
-          "title": "accepts a title",
-          "body": "accepts a body",
-          "votes": 0,
-          "topic": "existing topic",
-          "author": "butter_bridge",
-          "created_at": "date now",
-          "comment_count": "0"
+        "comment_id": 1,
+        "votes": -1,
+        "created_at": "2020-05-21T23:19:00.000Z",
+        "author": "tickle122",
+        "body": "Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus."
       }
     }
   },
@@ -218,15 +210,16 @@
     "description": "Updates a user specified by id",
     "queries": ["id"],
     "example request": {
-        "username": "new_user",
+        "username": "butter_bridge",
+        "new_username": "new_user",
         "name": "new",
         "avatar_url":
           "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
     },
     "example response": {
       "user": {
-          "username": "butter_bridge",
-          "name": "jonny",
+          "username": "new_user",
+          "name": "new",
           "avatar_url":
             "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
       }
@@ -234,7 +227,6 @@
   },
   "POST /api/users": {
     "description": "Posts a new user",
-    "queries": ["id"],
     "example request": {
         "username": "icellusedkars",
         "name": "sam",

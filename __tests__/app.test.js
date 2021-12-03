@@ -794,13 +794,12 @@ describe("APP", () => {
             })
         })
     })
-    describe("PATCH /api/users/:username", () => {
+    describe.only("PATCH /api/users/:username", () => {
         test("status 200: responds with specified user and updated information", () => {
             return request(app)
             .patch("/api/users/butter_bridge")
             .send({ 
                 username: "butter_bridge",
-                new_username: "test",
                 name: "test",
                 avatar_url: "test avatar"
             })
@@ -808,7 +807,7 @@ describe("APP", () => {
             .then(({body}) => {
                 expect(body.user).toEqual(
                     {   
-                        username: "test",
+                        username: "butter_bridge",
                         name: "test",
                         avatar_url: "test avatar"
                     })
@@ -828,7 +827,6 @@ describe("APP", () => {
             .patch("/api/users/not_a_user")
             .send({ 
                 username: "not_a_user",
-                new_username: "test_user",
                 name: "test",
                 avatar_url: "test avatar"
             })

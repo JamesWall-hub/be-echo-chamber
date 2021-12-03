@@ -21,24 +21,28 @@ exports.selectUserById = async (id) => {
     return rows[0]
 }
 
-exports.updateUser = async (username, name, avatar, newUsername) => {
+exports.updateUser = async (username, name, avatar) => {
     if(!username) return Promise.reject({status: 400, msg: "Invalid request"})
-    let queryValues = [username, newUsername]
+    let queryValues = [username]
 
     let queryString = `
     UPDATE users
     SET
-    username = ($2)
     `
 
     if(name) {
         queryValues.push(name)
-        queryString += `, name = ($${queryValues.length})`
+        queryString += `name = ($${queryValues.length})`
     }
 
     if(avatar) {
         queryValues.push(avatar)
-        queryString += `, avatar_url = ($${queryValues.length})`
+        if(name){
+            queryString += `, avatar_url = ($${queryValues.length})`
+        } else {
+            queryString += `avatar_url = ($${queryValues.length})` 
+        }
+        
     }
 
     queryString += `
@@ -47,7 +51,7 @@ exports.updateUser = async (username, name, avatar, newUsername) => {
     ;`
 
     await db.query(queryString, queryValues)
-    return this.selectUserById(newUsername)
+    return this.selectUserById(username)
 }
 
 exports.insertUser = async (username, name="", avatar_url="") => {

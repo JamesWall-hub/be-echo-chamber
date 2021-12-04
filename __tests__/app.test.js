@@ -486,18 +486,6 @@ describe("APP", () => {
                 expect(body.msg).toBe("Bad request")
             })
         })
-        test("status 404: responds with route not found for valid id that does not exist yet", () => {
-            return request(app)
-            .post("/api/articles/999/comments")
-            .send({
-                username: "butter_bridge",
-                body: "dot to be or dot not to be"
-            })
-            .expect(404)
-            .then(({body}) => {
-                expect(body.msg).toBe("Route not found")
-            })
-        })
     })
     describe("DELETE /api/comments/:comment_id", () => {
         test("status 204: responds with no content and deletes specified comment", () => {
@@ -794,7 +782,7 @@ describe("APP", () => {
             })
         })
     })
-    describe.only("PATCH /api/users/:username", () => {
+    describe("PATCH /api/users/:username", () => {
         test("status 200: responds with specified user and updated information", () => {
             return request(app)
             .patch("/api/users/butter_bridge")
